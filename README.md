@@ -70,31 +70,40 @@ A fully functional web-based Spotify clone built with HTML, CSS, and JavaScript 
 ## 📁 Project Structure
 
 ```
-Spotify/
-├── index.html                    # Main application interface
-├── script.js                     # Core JavaScript functionality
-├── style.css                     # Main stylesheet
-├── utility.css                   # Utility classes and animations
-├── favicon.ico                   # Application icon
-├── hello.html                    # Welcome page
-├── README.md                     # This documentation
-├── songs/                        # Music files directory
-│   ├── Sun Saathiya - Full Song - Disney's ABCD 2  Varun Dhawan - Shraddha Kapoor  Sachin - Jigar - Zee Music Company.mp3
-│   ├── Gori Hai Kalaiyan - Mere Husband Ki Biwi 320 Kbps.mp3
-│   ├── Dil Diyan Gallan - Tiger Zinda Hai 320 Kbps.mp3
-│   ├── Achyutam-Keshavam-Shreya-Ghoshal.mp3
-│   └── Dhun_320(PagaiWorld.com).mp3
-├── img/                          # Icons and images
+Spotify_Clone/
+├── favicon.ico
+├── hello.html
+├── index.html
+├── README.md
+├── script.js
+├── style.css
+├── utility.css
+├── img/
+│   ├── close.svg
+│   ├── cover.jpg
+│   ├── hamburger.svg
+│   ├── home.svg
 │   ├── logo.svg
-│   ├── play.svg
-│   ├── pause.svg
 │   ├── music.svg
-│   └── [other UI icons]
-└── Spotify Login_SignUp/         # Authentication system
-    ├── login.html                # Login page
-    ├── style.css                 # Login page styles
-    ├── app.js                    # Authentication logic
-    └── img/                      # Login page images
+│   ├── mute.svg
+│   ├── nextsong.svg
+│   ├── pause.svg
+│   ├── play.svg
+│   ├── playlist.svg
+│   ├── prevsong.svg
+│   ├── search.svg
+│   └── volume.svg
+├── songs/
+│   ├── Achyutam-Keshavam-Shreya-Ghoshal.mp3
+│   └── Sun Saathiya - Full Song - Disney's ABCD 2  Varun Dhawan - Shraddha Kapoor  Sachin - Jigar - Zee Music Company.mp3
+└── Spotify Login_SignUp/
+    ├── app.js
+    ├── login.html
+    ├── style.css
+    └── img/
+        ├── Listening music.svg
+        ├── log.svg
+        └── register.svg
 ```
 
 ## 🎵 Adding New Songs
@@ -117,10 +126,7 @@ const songMetadata = [
 
 ### Current Song Library
 - **Sun Saathiya** - Sachin-Jigar, Priya Saraiya
-- **Gori Hai Kalaiyan** - Arijit Singh
-- **Dil Diyan Gallan** - Atif Aslam
 - **Achyutam Keshavam** - Shreya Ghoshal
-- **Dhun (From 'Saiyaara')** - Arijit Singh
 
 ## 🛠️ Technical Details
 
