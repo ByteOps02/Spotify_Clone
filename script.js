@@ -1,4 +1,5 @@
 
+
 // --- LOGOUT FUNCTION ---
 function logout() {
   localStorage.removeItem('spotifyIsLoggedIn');
@@ -132,7 +133,7 @@ function playSong(index) {
   // Add event listeners before playing
   playerState.audio.addEventListener("timeupdate", updateProgressBar);
   playerState.audio.addEventListener("ended", playNext);
-  playerState.audio.addEventListener("loadedmetadata", (). {
+  playerState.audio.addEventListener("loadedmetadata", () => {
     updateSongInfo();
     updatePlayPauseButton(true);
     // Update total duration when metadata is loaded
@@ -268,8 +269,30 @@ function updateProgressBar() {
   }
 }
 
-// Add click and drag event for progress bar seeking
 document.addEventListener("DOMContentLoaded", function() {
+  main();
+
+  const authBtn = document.getElementById('auth-btn');
+  if (authBtn) {
+    if (localStorage.getItem('spotifyIsLoggedIn') === 'true') {
+      authBtn.textContent = 'Logout';
+      authBtn.onclick = logout;
+    } else {
+      authBtn.textContent = 'Log in/Sign Up';
+      authBtn.onclick = function() {
+        window.location.href = 'Spotify Login_SignUp/login.html';
+      };
+    }
+  }
+
+  document.querySelector('.hamburger').addEventListener('click', ()=>{
+    document.querySelector('.left').style.left = "0"
+  })
+  
+  document.querySelector('.close').addEventListener('click', ()=>{
+    document.querySelector('.left').style.left = "-100%"
+  })
+
   const progressContainer = document.querySelector(".progress");
   let isDragging = false;
 
@@ -300,10 +323,7 @@ document.addEventListener("DOMContentLoaded", function() {
       isDragging = false;
     });
   }
-});
 
-// Event Listeners for Playbar Controls
-document.addEventListener("DOMContentLoaded", function() {
   const playBtn = document.querySelector(".playbtn");
   const prevBtn = document.querySelector(".prevsong");
   const nextBtn = document.querySelector(".nextsong");
@@ -317,34 +337,4 @@ document.addEventListener("DOMContentLoaded", function() {
   if (nextBtn) {
     nextBtn.addEventListener("click", playNext);
   }
-});
-
-
-
-// Initialize everything when DOM is loaded
-document.addEventListener("DOMContentLoaded", function() {
-
-  main();
-
-  const authBtn = document.getElementById('auth-btn');
-  if (authBtn) {
-    if (localStorage.getItem('spotifyIsLoggedIn') === 'true') {
-      authBtn.textContent = 'Logout';
-      authBtn.onclick = logout;
-    } else {
-      authBtn.textContent = 'Log in/Sign Up';
-      authBtn.onclick = function() {
-        window.location.href = 'Spotify Login_SignUp/login.html';
-      };
-    }
-  }
-
-  document.querySelector('.hamburger').addEventListener('click', ()=>{
-    document.querySelector('.left').style.left = "0"
-  })
-  
-  document.querySelector('.close').addEventListener('click', ()=>{
-    document.querySelector('.left').style.left = "-100%"
-  })
-
 });
