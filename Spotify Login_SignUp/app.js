@@ -46,19 +46,31 @@ if (signupForm) {
       showMessage(signupForm, 'All fields are required.');
       return;
     }
-    let users = JSON.parse(localStorage.getItem('spotifyUsers') || '[]');
-    if (users.find(u => u.username === username || u.email === email)) {
-      showMessage(signupForm, 'User with this username or email already exists.');
-      return;
-    }
-    users.push({ username, email, password });
-    localStorage.setItem('spotifyUsers', JSON.stringify(users));
-    showMessage(signupForm, 'Signup successful! Please sign in.', false);
-    setTimeout(() => {
-      signinSignup.classList.remove('show-signup');
-      clearMessages();
-    }, 1200);
-    signupForm.reset();
+    
+    fetch('http://localhost:3000/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username, email, password })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.message.includes('successful')) {
+        showMessage(signupForm, data.message, false);
+        setTimeout(() => {
+          signinSignup.classList.remove('show-signup');
+          clearMessages();
+        }, 1200);
+        signupForm.reset();
+      } else {
+        showMessage(signupForm, data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      showMessage(signupForm, 'An error occurred. Please try again.');
+    });
   });
 }
 
@@ -70,19 +82,32 @@ if (signinForm) {
     clearMessages();
     const username = document.getElementById('login-username').value.trim();
     const password = document.getElementById('login-password').value;
-    let users = JSON.parse(localStorage.getItem('spotifyUsers') || '[]');
-    const user = users.find(u => (u.username === username || u.email === username) && u.password === password);
-    if (!user) {
-      showMessage(signinForm, 'Invalid username/email or password.');
-      return;
-    }
-    localStorage.setItem('spotifyIsLoggedIn', 'true');
-    localStorage.setItem('spotifyCurrentUser', JSON.stringify(user));
-    showMessage(signinForm, 'Login successful! Redirecting...', false);
-    setTimeout(() => {
-      window.location.href = '../index.html'; // Change to your web player page
-    }, 1200);
-    signinForm.reset();
+    
+    fetch('http://localhost:3000/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username, password })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.message.includes('successful')) {
+        localStorage.setItem('spotifyIsLoggedIn', 'true');
+        localStorage.setItem('spotifyCurrentUser', JSON.stringify(data.user));
+        showMessage(signinForm, data.message, false);
+        setTimeout(() => {
+          window.location.href = '../index.html'; // Change to your web player page
+        }, 1200);
+        signinForm.reset();
+      } else {
+        showMessage(signinForm, data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      showMessage(signinForm, 'An error occurred. Please try again.');
+    });
   });
 }
 

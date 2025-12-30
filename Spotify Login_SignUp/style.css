@@ -356,6 +356,33 @@ form.sign-up-form {
   box-shadow: 0 0 16px #1db95455;
 }
 
+.back-to-home {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.back-to-home:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.back-to-home i {
+  margin-right: 0.5rem;
+}
+
 /* === Responsive Tweaks for Glass and Background === */
 @media (max-width: 500px) {
   .background-animated .shape1 {
