@@ -132,7 +132,7 @@ function playSong(index) {
   // Add event listeners before playing
   playerState.audio.addEventListener("timeupdate", updateProgressBar);
   playerState.audio.addEventListener("ended", playNext);
-  playerState.audio.addEventListener("loadedmetadata", () => {
+  playerState.audio.addEventListener("loadedmetadata", (). {
     updateSongInfo();
     updatePlayPauseButton(true);
     // Update total duration when metadata is loaded
@@ -268,17 +268,36 @@ function updateProgressBar() {
   }
 }
 
-// Add click event for progress bar seeking
+// Add click and drag event for progress bar seeking
 document.addEventListener("DOMContentLoaded", function() {
   const progressContainer = document.querySelector(".progress");
+  let isDragging = false;
+
+  function seek(event) {
+    if (playerState.audio) {
+      const rect = progressContainer.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const progress = Math.max(0, Math.min(1, clickX / rect.width)); // Ensure progress is between 0 and 1
+      playerState.audio.currentTime = progress * playerState.audio.duration;
+    }
+  }
+
   if (progressContainer) {
-    progressContainer.addEventListener("click", (event) => {
-      if (playerState.audio) {
-        const rect = progressContainer.getBoundingClientRect();
-        const clickX = event.clientX - rect.left;
-        const progress = clickX / rect.width;
-        playerState.audio.currentTime = progress * playerState.audio.duration;
+    progressContainer.addEventListener("click", seek);
+
+    progressContainer.addEventListener("mousedown", (event) => {
+      isDragging = true;
+      seek(event);
+    });
+
+    document.addEventListener("mousemove", (event) => {
+      if (isDragging) {
+        seek(event);
       }
+    });
+
+    document.addEventListener("mouseup", () => {
+      isDragging = false;
     });
   }
 });
@@ -300,22 +319,11 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
 
-// Add the waveform animation script
-function createWaveform() {
-  const waveform = document.getElementById("waveform");
-  if (waveform) {
-    for (let i = 0; i < 20; i++) {
-      const bar = document.createElement("div");
-      bar.classList.add("bar");
-      bar.style.animationDelay = `${i * 0.1}s`;
-      waveform.appendChild(bar);
-    }
-  }
-}
+
 
 // Initialize everything when DOM is loaded
 document.addEventListener("DOMContentLoaded", function() {
-  createWaveform();
+
   main();
 
   const authBtn = document.getElementById('auth-btn');

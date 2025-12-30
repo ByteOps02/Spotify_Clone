@@ -368,39 +368,22 @@ body {
   flex-shrink: 0;
 }
 
-/* Add the waveform and progress bar styles */
-.waveform {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-}
-.bar {
-  width: 5px;
-  height: 20px;
-  background: cyan;
-  margin: 0 2px;
-  border-radius: 5px;
-  animation: wave 1s infinite ease-in-out;
-}
-@keyframes wave {
-  0%,
-  100% {
-    transform: scaleY(1);
-  }
-  50% {
-    transform: scaleY(2);
-  }
-}
+
 
 /* Progress Bar Styles */
 .progress {
-  width: 200px;
-  height: 5px;
+  width: 50%;
+  height: 8px;
   background: rgba(255, 255, 255, 0.3);
   border-radius: 5px;
   overflow: hidden;
   margin: 0 15px;
+  cursor: pointer;
+  transition: height 0.2s ease-in-out;
+}
+
+.progress:hover {
+  height: 12px;
 }
 
 .progress-bar {
@@ -409,7 +392,7 @@ body {
   background: white;
   border-radius: 5px;
   transform-origin: left;
-  transition: transform 0.1s ease;
+  transition: transform 0.1s linear;
 }
 
 
