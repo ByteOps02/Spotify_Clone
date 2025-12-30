@@ -54,7 +54,12 @@ if (signupForm) {
       },
       body: JSON.stringify({ username, email, password })
     })
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        return response.json().then(err => { throw err; });
+      }
+      return response.json();
+    })
     .then(data => {
       if (data.message.includes('successful')) {
         showMessage(signupForm, data.message, false);
@@ -69,7 +74,8 @@ if (signupForm) {
     })
     .catch(error => {
       console.error('Error:', error);
-      showMessage(signupForm, 'An error occurred. Please try again.');
+      const errorMessage = error.message || 'An error occurred. Please try again.';
+      showMessage(signupForm, errorMessage);
     });
   });
 }
@@ -82,6 +88,11 @@ if (signinForm) {
     clearMessages();
     const username = document.getElementById('login-username').value.trim();
     const password = document.getElementById('login-password').value;
+
+    if (!username || !password) {
+      showMessage(signinForm, 'All fields are required.');
+      return;
+    }
     
     fetch('http://localhost:3000/login', {
       method: 'POST',
@@ -90,7 +101,12 @@ if (signinForm) {
       },
       body: JSON.stringify({ username, password })
     })
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        return response.json().then(err => { throw err; });
+      }
+      return response.json();
+    })
     .then(data => {
       if (data.message.includes('successful')) {
         localStorage.setItem('spotifyIsLoggedIn', 'true');
@@ -106,7 +122,8 @@ if (signinForm) {
     })
     .catch(error => {
       console.error('Error:', error);
-      showMessage(signinForm, 'An error occurred. Please try again.');
+      const errorMessage = error.message || 'An error occurred. Please try again.';
+      showMessage(signinForm, errorMessage);
     });
   });
 }

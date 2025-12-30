@@ -1,7 +1,3 @@
-// --- AUTHENTICATION CHECK ---
-if (localStorage.getItem('spotifyIsLoggedIn') !== 'true') {
-  window.location.href = 'Spotify Login_SignUp/login.html';
-}
 
 // --- LOGOUT FUNCTION ---
 function logout() {
@@ -10,10 +6,12 @@ function logout() {
   window.location.href = 'Spotify Login_SignUp/login.html';
 }
 
-let songs = [];
-let currentIndex = 0;
-let audio = null;
-let isPlaying = false;
+const playerState = {
+  songs: [],
+  currentIndex: 0,
+  audio: null,
+  isPlaying: false,
+};
 
 // Song metadata - you can add more songs here
 const songMetadata = [
@@ -45,10 +43,10 @@ function formatTime(seconds) {
 }
 
 // Load Songs into UI
-async function main() {
+function main() {
   // Create song URLs from metadata
-  songs = songMetadata.map(song => `songs/${song.filename}`);
-  console.log("Available Songs:", songs);
+  playerState.songs = songMetadata.map(song => `songs/${song.filename}`);
+  console.log("Available Songs:", playerState.songs);
 
   let library = document.querySelector(".library");
   if (!library) {
@@ -67,7 +65,7 @@ async function main() {
   existingItems.forEach(item => item.remove());
 
   // Add songs to the library
-  songs.forEach((song, index) => {
+  playerState.songs.forEach((song, index) => {
     const metadata = songMetadata[index];
     
     let li = document.createElement("li");
@@ -102,7 +100,7 @@ async function main() {
     songList.appendChild(li);
   });
 
-  if (songs.length === 0) {
+  if (playerState.songs.length === 0) {
     console.error("No songs found!");
     return;
   }
@@ -113,41 +111,45 @@ async function main() {
 
 // Play Selected Song
 function playSong(index) {
-  if (index < 0 || index >= songs.length) return;
+    if (localStorage.getItem('spotifyIsLoggedIn') !== 'true') {
+        window.location.href = 'Spotify Login_SignUp/login.html';
+        return;
+    }
+  if (index < 0 || index >= playerState.songs.length) return;
 
-  currentIndex = index;
+  playerState.currentIndex = index;
 
   // Stop the currently playing song
-  if (audio) {
-    audio.pause();
-    audio.currentTime = 0;
+  if (playerState.audio) {
+    playerState.audio.pause();
+    playerState.audio.currentTime = 0;
   }
 
   // Create a new audio instance and play
-  audio = new Audio(songs[currentIndex]);
-  audio.volume = document.getElementById("volume-slider").value; // Set initial volume
+  playerState.audio = new Audio(playerState.songs[playerState.currentIndex]);
+  playerState.audio.volume = document.getElementById("volume-slider").value; // Set initial volume
   
   // Add event listeners before playing
-  audio.addEventListener("timeupdate", updateProgressBar);
-  audio.addEventListener("ended", playNext);
-  audio.addEventListener("loadedmetadata", () => {
+  playerState.audio.addEventListener("timeupdate", updateProgressBar);
+  playerState.audio.addEventListener("ended", playNext);
+  playerState.audio.addEventListener("loadedmetadata", () => {
     updateSongInfo();
     updatePlayPauseButton(true);
     // Update total duration when metadata is loaded
     const totalTimeSpan = document.getElementById("total-time");
-    if (totalTimeSpan && audio.duration && !isNaN(audio.duration)) {
-      totalTimeSpan.textContent = formatTime(audio.duration);
+    if (totalTimeSpan && playerState.audio.duration && !isNaN(playerState.audio.duration)) {
+      totalTimeSpan.textContent = formatTime(playerState.audio.duration);
     }
   });
 
-  audio.play().catch(error => {
+  playerState.audio.play().catch(error => {
     console.error("Error playing audio:", error);
     // If autoplay fails, just update the UI
     updateSongInfo();
     updatePlayPauseButton(false);
   });
   
-  isPlaying = true;
+  playerState.isPlaying = true;
 
   // Reset progress bar and time display
   const progressBar = document.getElementById("progress-bar");
@@ -169,30 +171,30 @@ function playSong(index) {
 
 // Toggle Play/Pause
 function togglePlayPause() {
-  if (!audio) return;
+  if (!playerState.audio) return;
 
-  if (isPlaying) {
-    audio.pause();
+  if (playerState.isPlaying) {
+    playerState.audio.pause();
     updatePlayPauseButton(false);
   } else {
-    audio.play().catch(error => {
+    playerState.audio.play().catch(error => {
       console.error("Error playing audio:", error);
     });
     updatePlayPauseButton(true);
   }
-  isPlaying = !isPlaying;
+  playerState.isPlaying = !playerState.isPlaying;
 }
 
 // Play Previous Song
 function playPrevious() {
-  currentIndex = (currentIndex - 1 + songs.length) % songs.length;
-  playSong(currentIndex);
+  playerState.currentIndex = (playerState.currentIndex - 1 + playerState.songs.length) % playerState.songs.length;
+  playSong(playerState.currentIndex);
 }
 
 // Play Next Song
 function playNext() {
-  currentIndex = (currentIndex + 1) % songs.length;
-  playSong(currentIndex);
+  playerState.currentIndex = (playerState.currentIndex + 1) % playerState.songs.length;
+  playSong(playerState.currentIndex);
 }
 
 // Update Play/Pause Button Icon
@@ -206,8 +208,8 @@ function updatePlayPauseButton(isPlaying) {
 // Update Song Info Display
 function updateSongInfo() {
   let songInfo = document.querySelector(".songinfo");
-  if (songInfo && currentIndex < songMetadata.length) {
-    const metadata = songMetadata[currentIndex];
+  if (songInfo && playerState.currentIndex < songMetadata.length) {
+    const metadata = songMetadata[playerState.currentIndex];
     songInfo.textContent = `${metadata.title} - ${metadata.artist}`;
   }
   
@@ -219,7 +221,7 @@ function updateSongInfo() {
 function updateCurrentlyPlayingSong() {
   const songItems = document.querySelectorAll(".songList ul li");
   songItems.forEach((item, index) => {
-    if (index === currentIndex) {
+    if (index === playerState.currentIndex) {
       item.classList.add("playing");
     } else {
       item.classList.remove("playing");
@@ -231,8 +233,8 @@ function updateCurrentlyPlayingSong() {
 const volumeSlider = document.getElementById("volume-slider");
 if (volumeSlider) {
   volumeSlider.addEventListener("input", (event) => {
-    if (audio) {
-      audio.volume = event.target.value;
+    if (playerState.audio) {
+      playerState.audio.volume = event.target.value;
     }
   });
 }
@@ -241,14 +243,14 @@ if (volumeSlider) {
 const progressBar = document.getElementById("progress-bar");
 
 function updateProgressBar() {
-  if (audio) {
+  if (playerState.audio) {
     const progressBar = document.getElementById("progress-bar");
     const currentTimeSpan = document.getElementById("current-time");
     const totalTimeSpan = document.getElementById("total-time");
     
     if (progressBar) {
-      const currentTime = audio.currentTime;
-      const duration = audio.duration;
+      const currentTime = playerState.audio.currentTime;
+      const duration = playerState.audio.duration;
       if (duration && !isNaN(duration)) {
         const progress = (currentTime / duration) * 100;
         progressBar.style.transform = `scaleX(${progress / 100})`;
@@ -257,11 +259,11 @@ function updateProgressBar() {
     
     // Update time display
     if (currentTimeSpan) {
-      currentTimeSpan.textContent = formatTime(audio.currentTime);
+      currentTimeSpan.textContent = formatTime(playerState.audio.currentTime);
     }
     
-    if (totalTimeSpan && audio.duration && !isNaN(audio.duration)) {
-      totalTimeSpan.textContent = formatTime(audio.duration);
+    if (totalTimeSpan && playerState.audio.duration && !isNaN(playerState.audio.duration)) {
+      totalTimeSpan.textContent = formatTime(playerState.audio.duration);
     }
   }
 }
@@ -271,11 +273,11 @@ document.addEventListener("DOMContentLoaded", function() {
   const progressContainer = document.querySelector(".progress");
   if (progressContainer) {
     progressContainer.addEventListener("click", (event) => {
-      if (audio) {
+      if (playerState.audio) {
         const rect = progressContainer.getBoundingClientRect();
         const clickX = event.clientX - rect.left;
         const progress = clickX / rect.width;
-        audio.currentTime = progress * audio.duration;
+        playerState.audio.currentTime = progress * playerState.audio.duration;
       }
     });
   }
@@ -315,4 +317,26 @@ function createWaveform() {
 document.addEventListener("DOMContentLoaded", function() {
   createWaveform();
   main();
+
+  const authBtn = document.getElementById('auth-btn');
+  if (authBtn) {
+    if (localStorage.getItem('spotifyIsLoggedIn') === 'true') {
+      authBtn.textContent = 'Logout';
+      authBtn.onclick = logout;
+    } else {
+      authBtn.textContent = 'Log in/Sign Up';
+      authBtn.onclick = function() {
+        window.location.href = 'Spotify Login_SignUp/login.html';
+      };
+    }
+  }
+
+  document.querySelector('.hamburger').addEventListener('click', ()=>{
+    document.querySelector('.left').style.left = "0"
+  })
+  
+  document.querySelector('.close').addEventListener('click', ()=>{
+    document.querySelector('.left').style.left = "-100%"
+  })
+
 });

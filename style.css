@@ -412,3 +412,44 @@ body {
   transition: transform 0.1s ease;
 }
 
+
+.hamburger{
+  display: none;
+}
+
+.close{
+  display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .left {
+    width: 100%;
+    position: absolute;
+    left: -100%;
+    transition: all .3s;
+    z-index: 1;
+    background-color: black;
+
+  }
+
+  .right{
+    width: 100vw;
+  }
+  .songinfo, .songtime{
+    width: auto;
+  }
+
+  .hamburger{
+    display: block;
+  }
+
+  .close{
+    display: block;
+    position: absolute;
+    right: 30px;
+    top: 30px;
+    width: 20px;
+  }
+  
+}
