@@ -23,24 +23,9 @@ const songMetadata = [
     artist: "Sachin-Jigar, Priya Saraiya"
   },
   {
-    filename: "Gori Hai Kalaiyan - Mere Husband Ki Biwi 320 Kbps.mp3",
-    title: "Gori Hai Kalaiyan",
-    artist: "Arijit Singh"
-  },
-  {
-    filename: "Dil Diyan Gallan - Tiger Zinda Hai 320 Kbps.mp3",
-    title: "Dil Diyan Gallan",
-    artist: "Atif Aslam"
-  },
-  {
     filename: "Achyutam-Keshavam-Shreya-Ghoshal.mp3",
     title: "Achyutam Keshavam",
     artist: "Shreya Ghoshal"
-  },
-  {
-    filename: "Dhun_320(PagaiWorld.com).mp3",
-    title: "Dhun(From 'Saiyaara')",
-    artist: "Arijit Singh"
   }
 ];
 
